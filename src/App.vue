@@ -1,48 +1,40 @@
 <template>
   <v-responsive class="border rounded">
     <v-app id="app">
-      <v-container class="app-header">
-        <MainTitle title="WeatherVue" />
-      </v-container>
-
-      <v-main>
-        <v-container>
-          <SubTitle subtitle="Adicionar Cidade" />
-          <v-container class="city-input">
-            <v-text-field
-              clearable
-              variant="outlined"
-              density="compact"
-              color="secondary"
-              placeholder="Digite o nome de uma cidade"
-              class="custom-text-field"
-            ></v-text-field>
-            <v-btn color="secondary" class="btn-plus">
-              <v-icon size="15px">mdi-map-marker-plus</v-icon>
-            </v-btn>
-          </v-container>
-        </v-container>
-      </v-main>
+      <router-view></router-view>
     </v-app>
   </v-responsive>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import MainTitle from "./components/MainTitle.vue";
-import SubTitle from "./components/SubTitle.vue";
+import VueRouter from "vue-router";
+
+Vue.use(VueRouter);
+
+const routes = [
+  {
+    path: "/",
+    name: "Home",
+    component: () => import("./views/HomeView.vue"),
+  },
+  {
+    path: "/city/:id",
+    name: "City",
+    component: () => import("./views/CityView.vue"),
+  },
+];
+
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes,
+});
 
 export default Vue.extend({
   name: "App",
-
-  components: {
-    MainTitle,
-    SubTitle,
-  },
-
-  data: () => ({
-    //
-  }),
+  components: {},
+  router,
 });
 </script>
 
@@ -55,24 +47,14 @@ export default Vue.extend({
   align-content: start;
 }
 
-.city-input {
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-
-.custom-text-field {
-  margin-right: 10px;
-  max-width: 350px;
-}
-
-.btn-plus {
-  margin-left: 5px;
-  height: 20px;
-}
-
 #app {
-  background-image: url("./assets/texture.svg");
+  background-image: url("/public/texture.svg");
   background-repeat: repeat;
+  font-family: "Open Sans", sans-serif;
+}
+body {
+  background-image: url("/public/texture.svg");
+  background-repeat: repeat;
+  font-family: "Open Sans", sans-serif;
 }
 </style>
