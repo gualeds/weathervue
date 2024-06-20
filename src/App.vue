@@ -1,35 +1,78 @@
 <template>
-  <div id="container">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-  </div>
+  <v-responsive class="border rounded">
+    <v-app id="app">
+      <v-container class="app-header">
+        <MainTitle title="WeatherVue" />
+      </v-container>
+
+      <v-main>
+        <v-container>
+          <SubTitle subtitle="Adicionar Cidade" />
+          <v-container class="city-input">
+            <v-text-field
+              clearable
+              variant="outlined"
+              density="compact"
+              color="secondary"
+              placeholder="Digite o nome de uma cidade"
+              class="custom-text-field"
+            ></v-text-field>
+            <v-btn color="secondary" class="btn-plus">
+              <v-icon size="15px">mdi-map-marker-plus</v-icon>
+            </v-btn>
+          </v-container>
+        </v-container>
+      </v-main>
+    </v-app>
+  </v-responsive>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import MainTitle from "./components/MainTitle.vue";
+import SubTitle from "./components/SubTitle.vue";
+
 export default Vue.extend({
   name: "App",
+
   components: {
-    HelloWorld,
+    MainTitle,
+    SubTitle,
   },
+
+  data: () => ({
+    //
+  }),
 });
 </script>
 
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+<style lang="scss">
+.app-header {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  align-content: start;
 }
-html {
-  margin: 0;
+
+.city-input {
   padding: 0;
-  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
-#container {
-  margin: 0;
-  padding: 0;
-  background-color: aqua;
-  box-sizing: border-box;
+
+.custom-text-field {
+  margin-right: 10px;
+  max-width: 350px;
+}
+
+.btn-plus {
+  margin-left: 5px;
+  height: 20px;
+}
+
+#app {
+  background-image: url("./assets/texture.svg");
+  background-repeat: repeat;
 }
 </style>
