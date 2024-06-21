@@ -1,15 +1,15 @@
 <template>
-  <v-card class="card">
+  <v-card :id="'weather-icon-' + icon" class="card">
     <v-card-item class="illustration">
       <div>
-        <img src="../assets/sunny.svg" class="card-img" />
+        <img :src="getWeatherIcon(icon)" class="card-img" />
       </div>
     </v-card-item>
     <v-card-item class="maininfo">
-      <v-card-title class="temperature">{{ temperature }}</v-card-title>
+      <v-card-title class="temperature">{{ temperature }}°C</v-card-title>
       <v-card-title class="subinfo"
-        ><v-icon color="white" size="15px">mdi-water</v-icon>{{ humidity }}% |
-        {{ weatherDescription }}</v-card-title
+        ><v-icon class="iconweather" color="white" size="15px">mdi-water</v-icon
+        >{{ humidity }}% | {{ getWeatherDescription(icon) }}</v-card-title
       >
       <v-card-title class="subinfo"
         >{{ cityName }}, {{ stateName }}</v-card-title
@@ -33,6 +33,95 @@ export default Vue.extend({
     weatherDescription: String,
     cityName: String,
     stateName: String,
+    icon: String,
+  },
+  methods: {
+    getWeatherIcon(icon: string): string {
+      // Mapeie o ícone retornado pela API OpenWeatherMap para o caminho da imagem local
+      switch (icon) {
+        case "01d":
+          return require("@/assets/cloudy.svg");
+        case "01n":
+          return require("@/assets/cloudy.svg");
+        case "02d":
+          return require("@/assets/cloudy.svg");
+        case "02n":
+          return require("@/assets/cloudy.svg");
+        case "03d":
+          return require("@/assets/sunny.svg");
+        case "03n":
+          return require("@/assets/sunny.svg");
+        case "04d":
+          return require("@/assets/cloudy.svg");
+        case "04n":
+          return require("@/assets/cloudy.svg");
+        case "09d":
+          return require("@/assets/rainy.svg");
+        case "09n":
+          return require("@/assets/rainy.svg");
+        case "10d":
+          return require("@/assets/rainy.svg");
+        case "10n":
+          return require("@/assets/rainy.svg");
+        case "11d":
+          return require("@/assets/thunderstorm.svg");
+        case "11n":
+          return require("@/assets/thunderstorm.svg");
+        case "13d":
+          return require("@/assets/snowy.svg");
+        case "13n":
+          return require("@/assets/snowy.svg");
+        case "50d":
+          return require("@/assets/misty.svg");
+        case "50n":
+          return require("@/assets/misty.svg");
+        default:
+          return require("@/assets/sunny.svg");
+      }
+    },
+    getWeatherDescription(weatherDescription: string): string {
+      // Mapeie o ícone retornado pela API OpenWeatherMap para o caminho da imagem local
+      switch (weatherDescription) {
+        case "01d":
+          return "Céu Limpo";
+        case "01n":
+          return "Céu Limpo";
+        case "02d":
+          return "Poucas nuvens";
+        case "02n":
+          return "Poucas nuvens";
+        case "03d":
+          return "Nuvens dispersas";
+        case "03n":
+          return "Nuvens dispersas";
+        case "04d":
+          return "Nublado";
+        case "04n":
+          return "Nublado";
+        case "09d":
+          return "Chuva fraca";
+        case "09n":
+          return "Chuva fraca";
+        case "10d":
+          return "Chuva";
+        case "10n":
+          return "Chuva";
+        case "11d":
+          return "Tempestade";
+        case "11n":
+          return "Tempestade";
+        case "13d":
+          return "Nevando";
+        case "13n":
+          return "Nevando";
+        case "50d":
+          return "Névoa";
+        case "50n":
+          return "Névoa";
+        default:
+          return require("@/assets/sunny.svg");
+      }
+    },
   },
 });
 </script>
@@ -49,6 +138,10 @@ export default Vue.extend({
   justify-content: space-between;
   margin: 0 10px;
   padding: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 .card-img {
   width: 80px;
@@ -94,6 +187,48 @@ export default Vue.extend({
   margin-top: 10px;
   color: white;
   height: 10px;
+}
+/* Estilos dos cards */
+#weather-icon-01d,
+#weather-icon-01n {
+  background: linear-gradient(90deg, #f6f7e2f6 0%, rgb(132, 157, 160) 100%);
+}
+
+#weather-icon-02d,
+#weather-icon-02n {
+  background: linear-gradient(90deg, #f6f7e2f6 0%, rgb(132, 157, 160) 100%);
+}
+#weather-icon-03d,
+#weather-icon-03n {
+  background: linear-gradient(90deg, #aad4a3 0%, #8ac6ba 100%);
+}
+#weather-icon-04d,
+#weather-icon-04n {
+  background: linear-gradient(90deg, #f6f7e2f6 0%, rgb(132, 157, 160) 100%);
+}
+#weather-icon-09d,
+#weather-icon-09n {
+  background: linear-gradient(90deg, #b2c8f7f6 0%, rgb(83, 129, 255) 100%);
+}
+#weather-icon-10d,
+#weather-icon-10n {
+  background: linear-gradient(90deg, #b2c8f7f6 0%, rgb(83, 129, 255) 100%);
+}
+#weather-icon-11d,
+#weather-icon-11n {
+  background: linear-gradient(90deg, #1f033af6 0%, rgb(0, 31, 114) 100%);
+}
+#weather-icon-13d,
+#weather-icon-13n {
+  background: linear-gradient(
+    90deg,
+    #4d555fb4 0%,
+    rgba(234, 222, 252, 0.836) 100%
+  );
+}
+#weather-icon-50d,
+#weather-icon-50n {
+  background: linear-gradient(90deg, #8f8d97f6 0%, #a9b9c9 100%);
 }
 
 @media (max-width: 480px) {
