@@ -128,7 +128,7 @@ export default Vue.extend({
       if (query.length > 2) {
         try {
           const response = await axios.get(
-            `http://api.openweathermap.org/geo/1.0/direct`,
+            `https://api.openweathermap.org/geo/1.0/direct`,
             {
               params: {
                 q: query,
@@ -153,7 +153,7 @@ export default Vue.extend({
       if (this.city) {
         try {
           const response = await axios.get(
-            `http://api.openweathermap.org/geo/1.0/direct`,
+            `https://api.openweathermap.org/geo/1.0/direct`,
             {
               params: {
                 q: this.city,
