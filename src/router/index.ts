@@ -1,20 +1,18 @@
 import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
-import CityView from "./views/CityView.vue";
-import HomeView from "./views/HomeView.vue";
+import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-const routes: RouteConfig[] = [
+const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomeView,
+    component: () => import("../views/HomeView.vue"),
   },
   {
-    path: "/city/:cityName",
+    path: "/city/:lat/:lon",
     name: "City",
-    component: CityView,
+    component: () => import("../views/CityView.vue"),
     props: true,
   },
 ];

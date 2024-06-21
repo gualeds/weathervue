@@ -19,9 +19,10 @@ const routes = [
     component: () => import("./views/HomeView.vue"),
   },
   {
-    path: "/city/:id",
+    path: "/city/:lat/:lon",
     name: "City",
     component: () => import("./views/CityView.vue"),
+    props: true,
   },
 ];
 

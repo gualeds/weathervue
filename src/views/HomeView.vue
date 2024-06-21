@@ -20,9 +20,18 @@
             class="custom-text-field"
             @update:search-input="fetchCitySuggestions"
           ></v-autocomplete>
-          <v-btn color="secondary" class="btn-plus" @click="addCity">
-            <v-icon size="15px">mdi-map-marker-plus</v-icon>
-          </v-btn>
+          <div class="btn-container">
+            <v-btn color="secondary" class="btn-plus" @click="addCity">
+              <v-icon size="15px">mdi-map-marker-plus</v-icon>
+            </v-btn>
+            <v-btn
+              color="secondary"
+              class="btn-reset"
+              @click="removeLocalStorage"
+            >
+              <v-icon size="15px">mdi-reload</v-icon>
+            </v-btn>
+          </div>
         </v-container>
       </v-container>
       <v-container class="card-container">
@@ -34,6 +43,9 @@
             :cityName="city.cityName"
             :stateName="city.stateName"
             :icon="city.icon"
+            :latitude="city.latitude"
+            :longitude="city.longitude"
+            @go-to-city-view="goToCityView"
           />
         </div>
       </v-container>
@@ -46,7 +58,7 @@ import axios from "axios";
 import Vue from "vue";
 
 const OPENWEATHER_API_KEY = "6f75677a7bc055206bcec8c6f7d150b3";
-// Interface para representar o tipo de cada cidade
+
 interface CityInfo {
   temperature: number;
   humidity: number;
@@ -72,16 +84,25 @@ export default Vue.extend({
   }),
   computed: {
     displayedCities(): CityInfo[] {
-      // Exibindo apenas as cinco cidades pré-definidas mais as cidades adicionadas pelo usuário
       const preDefinedCities = this.selectedCities.slice(0, 5);
       const userAddedCities = this.selectedCities.slice(5);
       return [...preDefinedCities, ...userAddedCities];
     },
   },
+  created() {
+    this.retrieveSelectedCities();
+  },
   mounted() {
     this.fetchPredefinedCities();
   },
+
   methods: {
+    retrieveSelectedCities() {
+      const selectedCities = localStorage.getItem("selectedCities");
+      if (selectedCities) {
+        this.selectedCities = JSON.parse(selectedCities);
+      }
+    },
     kelvinToCelsius(kelvin: number): number {
       return kelvin - 273.15;
     },
@@ -96,36 +117,47 @@ export default Vue.extend({
 
       for (const coords of citiesCoordinates) {
         try {
-          const response = await axios.get(
-            `https://api.openweathermap.org/data/2.5/weather`,
-            {
-              params: {
-                lat: coords.latitude,
-                lon: coords.longitude,
-                appid: "6f75677a7bc055206bcec8c6f7d150b3",
-              },
-            }
+          // Verificar se a cidade já está presente em selectedCities
+          const exists = this.selectedCities.some(
+            (city) =>
+              city.latitude === coords.latitude &&
+              city.longitude === coords.longitude
           );
 
-          const cityInfo: CityInfo = {
-            temperature: response?.data?.main.temp,
-            humidity: response?.data?.main?.humidity,
-            weatherDescription: response?.data?.weather[0].description,
-            cityName: response?.data?.name,
-            stateName: response?.data?.sys?.country,
-            icon: response?.data?.weather[0]?.icon,
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-          };
+          // Se a cidade não estiver presente, buscar informações e adicionar a selectedCities
+          if (!exists) {
+            const response = await axios.get(
+              `https://api.openweathermap.org/data/2.5/weather`,
+              {
+                params: {
+                  lat: coords.latitude,
+                  lon: coords.longitude,
+                  appid: "6f75677a7bc055206bcec8c6f7d150b3",
+                },
+              }
+            );
 
-          this.selectedCities.push(cityInfo);
+            const cityInfo: CityInfo = {
+              temperature: response?.data?.main?.temp,
+              humidity: response?.data?.main?.humidity?.toString(),
+              weatherDescription: response?.data?.weather[0].description,
+              cityName: response?.data?.name,
+              stateName: response?.data?.sys?.country,
+              icon: response?.data?.weather[0]?.icon,
+              latitude: coords?.latitude,
+              longitude: coords?.longitude,
+            };
+
+            this.selectedCities.push(cityInfo);
+          }
         } catch (error) {
           console.error("Erro ao obter informações da cidade:", error);
         }
       }
     },
+
     async fetchCitySuggestions(query: string) {
-      if (query.length > 2) {
+      if (typeof query === "string" && query.length > 2) {
         try {
           const response = await axios.get(
             `https://api.openweathermap.org/geo/1.0/direct`,
@@ -163,25 +195,20 @@ export default Vue.extend({
             }
           );
 
-          if (response.data.length > 0) {
-            const { lat, lon } = response.data[0];
-            console.log(
-              `Cordenadas para ${this.city}: Latitude ${lat}, Longitude ${lon}`
-            );
+          if (response?.data?.length > 0) {
+            const { lat, lon } = response?.data[0];
 
-            // Verifica se a cidade já existe no array de cidades selecionadas
             const exists = this.selectedCities.some(
               (city) => city.latitude === lat && city.longitude === lon
             );
 
             if (!exists) {
-              // Chamando o método fetchWeatherData para obter dados do clima
-              this.fetchWeatherData(lat, lon);
+              await this.fetchWeatherData(lat, lon);
             } else {
               console.log("Cidade já adicionada.");
             }
           } else {
-            console.log(`Nenhuma coorenada para a cidade ${this.city}`);
+            console.log(`Nenhuma coordenada para a cidade ${this?.city}`);
           }
         } catch (error) {
           console.error("Erro ao obter coordenadas:", error);
@@ -190,6 +217,11 @@ export default Vue.extend({
         console.log("Campo de pesquisa vazio.");
       }
     },
+    async removeLocalStorage() {
+      localStorage.removeItem("selectedCities");
+      this.selectedCities = [];
+    },
+
     async fetchWeatherData(lat: number, lon: number) {
       try {
         const response = await axios.get(
@@ -202,21 +234,10 @@ export default Vue.extend({
             },
           }
         );
-        const { sys } = response.data;
-
-        const currentTime = Date.now() / 1000;
-        const sunriseTime = sys.sunrise;
-        const sunsetTime = sys.sunset;
-
-        if (currentTime >= sunriseTime && currentTime <= sunsetTime) {
-          console.log("It's daytime.");
-        } else {
-          console.log("It's nighttime.");
-        }
 
         const cityInfo: CityInfo = {
           temperature: response?.data?.main.temp,
-          humidity: response?.data?.main?.humidity,
+          humidity: response?.data?.main?.humidity?.toString(),
           weatherDescription: response?.data?.weather[0].description,
           cityName: response?.data?.name,
           stateName: response?.data?.sys?.country,
@@ -225,9 +246,23 @@ export default Vue.extend({
           longitude: lon,
         };
         this.selectedCities.unshift(cityInfo);
+        // Save selectedCities to localStorage
+        localStorage.setItem(
+          "selectedCities",
+          JSON.stringify(this.selectedCities)
+        );
       } catch (error) {
         console.error("Error fetching weather data:", error);
       }
+    },
+    goToCityView({
+      latitude,
+      longitude,
+    }: {
+      latitude: number;
+      longitude: number;
+    }) {
+      this.$router.push(`/city/${latitude}/${longitude}`);
     },
   },
 });
@@ -252,7 +287,13 @@ export default Vue.extend({
   margin-right: 10px;
   max-width: 350px;
 }
-
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  gap: 10px;
+}
 .btn-plus {
   margin-left: 5px;
   height: 20px;
@@ -275,6 +316,13 @@ export default Vue.extend({
   justify-content: left;
   display: flex;
   max-width: 33%;
+
+  @media (max-width: 1024px) {
+    max-width: calc(50% - 20px);
+  }
+  @media (max-width: 768px) {
+    max-width: calc(100% - 20px);
+  }
 }
 
 @media (max-width: 768px) {

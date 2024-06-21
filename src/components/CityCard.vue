@@ -1,24 +1,31 @@
 <template>
   <v-card :id="'weather-icon-' + icon" class="card">
-    <v-card-item class="illustration">
+    <v-card-title class="illustration">
       <div>
         <img :src="getWeatherIcon(icon)" class="card-img" />
       </div>
-    </v-card-item>
-    <v-card-item class="maininfo">
+    </v-card-title>
+    <v-card-title class="maininfo">
       <v-card-title class="temperature">{{ temperature }}°C</v-card-title>
       <v-card-title class="subinfo"
         ><v-icon class="iconweather" color="white" size="15px">mdi-water</v-icon
-        >{{ humidity }}% | {{ getWeatherDescription(icon) }}</v-card-title
+        >{{ humidity.toString() }}% |
+        {{ getWeatherDescription(icon) }}</v-card-title
       >
       <v-card-title class="subinfo"
         >{{ cityName }}, {{ stateName }}</v-card-title
       >
-      <v-btn class="btn" color="#545B5A" height="25px" width="auto"
-        >Previsão de 5 dias</v-btn
-      >
-    </v-card-item>
-
+      <div class="btn-container">
+        <v-btn
+          class="btn"
+          color="#545B5A"
+          height="25px"
+          width="auto"
+          @click="redirectToCityView"
+          >Previsão de 5 dias</v-btn
+        >
+      </div>
+    </v-card-title>
     <v-card-actions> </v-card-actions>
   </v-card>
 </template>
@@ -34,8 +41,17 @@ export default Vue.extend({
     cityName: String,
     stateName: String,
     icon: String,
+    latitude: Number,
+    longitude: Number,
+    goToCityView: Function,
   },
   methods: {
+    redirectToCityView() {
+      this.$emit("go-to-city-view", {
+        latitude: this.latitude,
+        longitude: this.longitude,
+      });
+    },
     getWeatherIcon(icon: string): string {
       // Mapeie o ícone retornado pela API OpenWeatherMap para o caminho da imagem local
       switch (icon) {
@@ -168,11 +184,13 @@ export default Vue.extend({
 .temperature {
   color: white;
   font-family: "Open Sans Condensed", sans-serif;
-  font-weight: 300; /* Condensed Light */
+  font-weight: 300;
   font-size: 4rem;
   letter-spacing: 0;
   padding: 0;
   line-height: 1.4;
+  text-align: left;
+  width: 100%;
 }
 
 .illustration {
@@ -181,12 +199,23 @@ export default Vue.extend({
   justify-content: center;
   width: 40%;
 }
-
+.btn-container {
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  width: 100%;
+}
 .btn {
   border-radius: 30px;
   margin-top: 10px;
   color: white;
   height: 10px;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    height: 20px;
+    font-size: 0.7rem;
+  }
 }
 /* Estilos dos cards */
 #weather-icon-01d,
