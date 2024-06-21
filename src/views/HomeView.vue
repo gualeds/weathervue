@@ -224,8 +224,7 @@ export default Vue.extend({
           latitude: lat,
           longitude: lon,
         };
-
-        this.selectedCities.push(cityInfo);
+        this.selectedCities.unshift(cityInfo);
       } catch (error) {
         console.error("Error fetching weather data:", error);
       }
