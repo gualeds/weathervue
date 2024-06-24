@@ -58,10 +58,9 @@
 </template>
 
 <script lang="ts">
+import { OPENWEATHER_API_KEY } from "@/services/WeatherService";
 import axios from "axios";
 import Vue from "vue";
-
-const OPENWEATHER_API_KEY = "6f75677a7bc055206bcec8c6f7d150b3";
 
 interface CityInfo {
   temperature: number;
@@ -85,6 +84,7 @@ export default Vue.extend({
     city: "",
     citySuggestions: [] as Array<string>,
     selectedCities: [] as CityInfo[],
+    OPENWEATHER_API_KEY: process.env.OPENWEATHER_API_KEY,
   }),
   computed: {
     displayedCities(): CityInfo[] {
@@ -133,7 +133,7 @@ export default Vue.extend({
                 params: {
                   lat: coords.latitude,
                   lon: coords.longitude,
-                  appid: "6f75677a7bc055206bcec8c6f7d150b3",
+                  appid: OPENWEATHER_API_KEY,
                 },
               }
             );
@@ -231,7 +231,7 @@ export default Vue.extend({
             params: {
               lat,
               lon,
-              appid: "6f75677a7bc055206bcec8c6f7d150b3",
+              appid: OPENWEATHER_API_KEY,
             },
           }
         );

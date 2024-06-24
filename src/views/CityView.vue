@@ -48,6 +48,8 @@ export default {
       cityName: "",
       forecastData: null,
       forecastChartData: [],
+
+      OPENWEATHER_API_KEY: process.env.VUE_APP_OPENWEATHER_API_KEY,
     };
   },
   async created() {
