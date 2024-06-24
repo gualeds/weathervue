@@ -1,5 +1,5 @@
 # WEATHERVUE
-Esse repositório refere-se ao backoffice da D-GYM.Este é um projeto onde você pode acompanhar o tempo em várias cidades ao mesmo tempo, além de poder ver detalhes da previsão dos próximos 05 dias. O projeto foi feito com Vue2 juntamente com o Vuetify para criação da interface.
+Este é um projeto onde você pode acompanhar o tempo em várias cidades ao mesmo tempo, além de poder ver detalhes da previsão dos próximos 05 dias. O projeto foi feito com Vue2 juntamente com o Vuetify para criação da interface.
 
 ## Iniciando o projeto
 Para executar o projeto é necessário ter o **Node.js** e o **npm** instalados em seu sistema.
