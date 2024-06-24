@@ -202,7 +202,7 @@ export default Vue.extend({
             if (!exists) {
               await this.fetchWeatherData(lat, lon);
             } else {
-              console.log("Cidade já adicionada.");
+              this.$toast.warning("Cidade já adicionada.");
             }
           } else {
             console.log(`Nenhuma coordenada para a cidade ${this?.city}`);
