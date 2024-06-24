@@ -48,6 +48,10 @@
             @go-to-city-view="goToCityView"
           />
         </div>
+        <div class="no-cities" v-if="displayedCities.length === 0">
+          <v-icon size="30px">mdi-map-marker-question</v-icon>
+          <v-typography variant="body1">Nenhuma cidade a ser exibida.</v-typography>
+        </div>
       </v-container>
     </v-main>
   </v-responsive>
@@ -303,6 +307,17 @@ export default Vue.extend({
   align-items: start;
   justify-content: start;
   align-content: start;
+}
+
+.no-cities {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
 }
 
 .card {
