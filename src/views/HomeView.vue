@@ -117,14 +117,11 @@ export default Vue.extend({
 
       for (const coords of citiesCoordinates) {
         try {
-          // Verificar se a cidade já está presente em selectedCities
           const exists = this.selectedCities.some(
             (city) =>
               city.latitude === coords.latitude &&
               city.longitude === coords.longitude
           );
-
-          // Se a cidade não estiver presente, buscar informações e adicionar a selectedCities
           if (!exists) {
             const response = await axios.get(
               `https://api.openweathermap.org/data/2.5/weather`,
@@ -246,7 +243,6 @@ export default Vue.extend({
           longitude: lon,
         };
         this.selectedCities.unshift(cityInfo);
-        // Save selectedCities to localStorage
         localStorage.setItem(
           "selectedCities",
           JSON.stringify(this.selectedCities)

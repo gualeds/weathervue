@@ -1,10 +1,9 @@
 <template>
   <v-container class="city-view">
     <router-link to="/" class="go-back"
-      ><v-icon size="17px">mdi-arrow-left</v-icon>Voltar para a lista de
-      cidades</router-link
+      >Voltar para a lista de cidades</router-link
     >
-    <MainTitle title="WeatherVue" />
+    <MainTitle title="WeatherVue" class="main-title" />
     <SubTitle :subtitle="'Previsão de 5 dias para ' + cityName" />
     <v-main class="main-container">
       <v-container class="weather-chart-container">
@@ -34,8 +33,8 @@
 </template>
 
 <script>
-import WeatherService from "../services/WeatherService";
 import WeatherChart from "../components/WeatherChart.vue";
+import WeatherService from "../services/WeatherService";
 
 export default {
   name: "CityView",
@@ -121,17 +120,29 @@ export default {
 .forecast-date {
   font-weight: bold;
 }
-
+.main-title {
+  margin-top: 10px;
+}
 .go-back {
   margin-bottom: 20px;
   text-decoration: none;
+  font-size: 15px;
   font-weight: bold;
-  /* Definindo gradiente de cor como plano de fundo */
   background-image: linear-gradient(90deg, #8e78e7f6 0%, #32577ce3 100%);
-  /* Definindo a cor do texto como transparente */
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  border: 2px solid;
+  border-image: linear-gradient(90deg, #8e78e7f6 0%, #32577ce3 100%);
+  border-image-slice: 1;
+  padding: 5px;
+  margin-bottom: 10px;
+
+  &:hover {
+    cursor: pointer;
+    background: linear-gradient(90deg, #8e78e7f6 0%, #32577ce3 100%);
+    color: white;
+  }
 }
 
 .forecast-item {

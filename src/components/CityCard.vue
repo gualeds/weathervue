@@ -53,7 +53,6 @@ export default Vue.extend({
       });
     },
     getWeatherIcon(icon: string): string {
-      // Mapeie o ícone retornado pela API OpenWeatherMap para o caminho da imagem local
       switch (icon) {
         case "01d":
           return require("@/assets/cloudy.svg");
@@ -96,7 +95,6 @@ export default Vue.extend({
       }
     },
     getWeatherDescription(weatherDescription: string): string {
-      // Mapeie o ícone retornado pela API OpenWeatherMap para o caminho da imagem local
       switch (weatherDescription) {
         case "01d":
           return "Céu Limpo";

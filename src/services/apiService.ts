@@ -2,7 +2,6 @@ import axios from "axios";
 
 const OPENWEATHER_API_KEY = process.env.API_WEATHER_KEY;
 
-// Função para obter a latitude e longitude de uma cidade
 export const getCoordinates = async (
   city: string,
   state = "",
@@ -26,7 +25,6 @@ export const getCoordinates = async (
   throw new Error("City not found");
 };
 
-// Função para obter o clima com base nas coordenadas
 export const getWeather = async (lat: number, lon: number) => {
   const response = await axios.get(
     `https://api.openweathermap.org/data/2.5/weather`,
