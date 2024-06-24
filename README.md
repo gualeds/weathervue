@@ -34,3 +34,7 @@ Para realização de testes você deve executar os seguintes comandos:
 ```bash
    npm run cypress:open
 ```
+
+## Variáveis de ambientes
+
+Para fazer testes locais, é necessário uma chave (gratuita ou paga) da [OpenWeatherMap](https://openweathermap.org/api). Basta cadastrar-se e criar uma gratuitamente em "My API Keys", em seguida adicione a variável de ambiente *API_WEATHER_KEY*  o seu arquivo .env, .env.production e .env.development
